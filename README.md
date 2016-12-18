@@ -790,3 +790,627 @@ df.head(20)
 ```python
 df.to_csv('C:\\Users\\bsine\\Desktop\\data.csv', sep='\t')
 ```
+## Rotulação de dados
+
+
+
+```python
+import pandas as pd
+
+path = 'C:\\Users\\bsine\\Desktop\\'
+
+df = pd.DataFrame.from_csv(path = path+'data.csv' , sep = '\t')
+```
+
+
+```python
+df.head(3)
+```
+
+
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>price</th>
+      <th>sector</th>
+      <th>street</th>
+      <th>city</th>
+      <th>type</th>
+      <th>room</th>
+      <th>suite</th>
+      <th>park</th>
+      <th>m2</th>
+    </tr>
+    <tr>
+      <th>﻿</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>669.000</td>
+      <td>JD GOIAS</td>
+      <td>RUA 46</td>
+      <td>Goiania GO</td>
+      <td>APARTAMENTO</td>
+      <td>4</td>
+      <td>3</td>
+      <td>2</td>
+      <td>121</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>480.000</td>
+      <td>JD GOIAS</td>
+      <td>RUA 54</td>
+      <td>Goiania GO</td>
+      <td>APARTAMENTO</td>
+      <td>4</td>
+      <td>4</td>
+      <td>2</td>
+      <td>119</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>240.000</td>
+      <td>SETOR BUENO</td>
+      <td>RUA T 64</td>
+      <td>Goiania GO</td>
+      <td>APARTAMENTO</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>80</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+#Retirando a coluna 'city': 
+df.columns
+```
+
+
+
+
+    Index(['price', 'sector', 'street', 'city', 'type', 'room', 'suite', 'park',
+           'm2'],
+          dtype='object')
+
+
+
+
+```python
+del df['city']
+```
+
+
+```python
+df.head(3)
+```
+
+
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>price</th>
+      <th>sector</th>
+      <th>street</th>
+      <th>type</th>
+      <th>room</th>
+      <th>suite</th>
+      <th>park</th>
+      <th>m2</th>
+    </tr>
+    <tr>
+      <th>﻿</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>669.000</td>
+      <td>JD GOIAS</td>
+      <td>RUA 46</td>
+      <td>APARTAMENTO</td>
+      <td>4</td>
+      <td>3</td>
+      <td>2</td>
+      <td>121</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>480.000</td>
+      <td>JD GOIAS</td>
+      <td>RUA 54</td>
+      <td>APARTAMENTO</td>
+      <td>4</td>
+      <td>4</td>
+      <td>2</td>
+      <td>119</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>240.000</td>
+      <td>SETOR BUENO</td>
+      <td>RUA T 64</td>
+      <td>APARTAMENTO</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>80</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+#Selecionando todos os nomes de setores. 
+#Tentativa com drop_duplicates()
+uniques_drop = df.sector.drop_duplicates()
+uniques_drop[0:10]
+```
+
+
+
+
+    ﻿
+    0                      JD GOIAS
+    8                   SETOR BUENO
+    9              JARDIM ATLÂNTICO
+    11              RESID ELI FORTE
+    12         SETOR PEDRO LUDOVICO
+    14                SETOR MARISTA
+    17               JARDIM AMÉRICA
+    20                 VILA JARAGUÁ
+    23                SETOR CENTRAL
+    28    SETOR LESTE UNIVERSITARIO
+    Name: sector, dtype: object
+
+
+
+
+```python
+uniques_drop.count()
+```
+
+
+
+
+    298
+
+
+
+
+```python
+#Selecionando todos os nomes de setores. 
+#Tentativa com unique
+uniques_sector = df.sector.unique()
+uniques_sector[0:10]
+```
+
+
+
+
+    array(['JD GOIAS', 'SETOR BUENO', 'JARDIM ATLÂNTICO', 'RESID ELI FORTE',
+           'SETOR PEDRO LUDOVICO', 'SETOR MARISTA', 'JARDIM AMÉRICA',
+           'VILA JARAGUÁ', 'SETOR CENTRAL', 'SETOR LESTE UNIVERSITARIO'], dtype=object)
+
+
+
+
+```python
+len(uniques_sector)
+```
+
+
+
+
+    298
+
+
+
+
+```python
+#Aparentemente os dois tem o mesmo resultado. 
+```
+
+
+```python
+#Criando dicionário para setores: 
+sector_dic = {}
+
+#Cada label de setor deve representar um número inteiro neste momento: 
+index = 0
+for label_sector in uniques_sector: 
+    sector_dic[label_sector] = index
+    index += 1
+    
+
+```
+
+
+```python
+#Substituir labels no data set pelo index
+df['sector'] = df['sector'].apply(lambda x : sector_dic[str(x)])
+df.tail(3)
+```
+
+
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>price</th>
+      <th>sector</th>
+      <th>street</th>
+      <th>type</th>
+      <th>room</th>
+      <th>suite</th>
+      <th>park</th>
+      <th>m2</th>
+    </tr>
+    <tr>
+      <th>﻿</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>12761</th>
+      <td>1.580.000</td>
+      <td>1</td>
+      <td>RUA T 34</td>
+      <td>APARTAMENTO</td>
+      <td>4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>236</td>
+    </tr>
+    <tr>
+      <th>12768</th>
+      <td>230.000</td>
+      <td>6</td>
+      <td>AVENIDA C 4</td>
+      <td>APARTAMENTO</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <th>12771</th>
+      <td>177.000</td>
+      <td>33</td>
+      <td>AVENIDA ALPES,DOS</td>
+      <td>APARTAMENTO</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>56</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+#Selecionando os tipos únicos 
+uniques_street = df.street.unique()
+uniques_street[0:10]
+```
+
+
+
+
+    array(['RUA 46', 'RUA 54', 'RUA T 64', 'RUA CHARITA,DA', 'AVENIDA T 15',
+           'RUA DIVA FORTES', 'ALAMEDA COUTO MAGALHAES', 'AVENIDA 136',
+           'RUA C 180', 'RUA C 131'], dtype=object)
+
+
+
+
+```python
+len(uniques_street)
+```
+
+
+
+
+    1477
+
+
+
+
+```python
+#Criando dicionário para streets: 
+street_dic = {}
+
+#Cada label de setor deve representar um número inteiro neste momento: 
+index = 0
+for label_street in uniques_street: 
+    street_dic[label_street] = index
+    index += 1
+    
+```
+
+
+```python
+#Substituir labels no data set pelo index
+df['street'] = df['street'].apply(lambda x : street_dic[str(x)])
+df.tail(3)
+```
+
+
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>price</th>
+      <th>sector</th>
+      <th>street</th>
+      <th>type</th>
+      <th>room</th>
+      <th>suite</th>
+      <th>park</th>
+      <th>m2</th>
+    </tr>
+    <tr>
+      <th>﻿</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>12761</th>
+      <td>1.580.000</td>
+      <td>1</td>
+      <td>75</td>
+      <td>APARTAMENTO</td>
+      <td>4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>236</td>
+    </tr>
+    <tr>
+      <th>12768</th>
+      <td>230.000</td>
+      <td>6</td>
+      <td>137</td>
+      <td>APARTAMENTO</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <th>12771</th>
+      <td>177.000</td>
+      <td>33</td>
+      <td>428</td>
+      <td>APARTAMENTO</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>56</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+#Selecionando todos os nomes de type. 
+uniques_type = df.type.unique()
+uniques_type[0:10]
+```
+
+
+
+
+    array(['APARTAMENTO', 'CASA', 'CASA DE CONDOMÍNIO', 'QUITINETE',
+           'CASA COMERCIAL', 'FLAT', 'CASA DE VILA', 'CHÁCARA', 'LOFT',
+           'TERRENO PADRÃO'], dtype=object)
+
+
+
+
+```python
+len(uniques_type)
+```
+
+
+
+
+    13
+
+
+
+
+```python
+#Criando dicionário para types: 
+type_dic = {}
+
+#Cada label de setor deve representar um número inteiro neste momento: 
+index = 0
+for label_type in uniques_type: 
+    type_dic[label_type] = index
+    index += 1
+    
+```
+
+
+```python
+#Substituir labels no data set pelo index
+df['type'] = df['type'].apply(lambda x : type_dic[str(x)])
+df.tail(3)
+```
+
+
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>price</th>
+      <th>sector</th>
+      <th>street</th>
+      <th>type</th>
+      <th>room</th>
+      <th>suite</th>
+      <th>park</th>
+      <th>m2</th>
+    </tr>
+    <tr>
+      <th>﻿</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>12761</th>
+      <td>1.580.000</td>
+      <td>1</td>
+      <td>75</td>
+      <td>0</td>
+      <td>4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>236</td>
+    </tr>
+    <tr>
+      <th>12768</th>
+      <td>230.000</td>
+      <td>6</td>
+      <td>137</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <th>12771</th>
+      <td>177.000</td>
+      <td>33</td>
+      <td>428</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>56</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+#Convertendo dicionários para dataframe: 
+#sector_dic
+#street_dic
+#type_dic
+```
+
+
+```python
+sector_array = []
+for key in sector_dic: 
+    sector_array.append([sector_dic[key], key])
+
+df_sector = pd.DataFrame(data= sector_array, columns= ['id','label'])
+
+street_array = []
+for key in street_dic: 
+    street_array.append([street_dic[key], key])
+
+df_street = pd.DataFrame(data= street_array, columns= ['id','label'])
+
+type_array = []
+for key in type_dic: 
+    type_array.append([type_dic[key], key])
+    
+df_type =  pd.DataFrame(data= type_array, columns= ['id','label'])
+```
+
+
+```python
+#Armazenando dados em disco para consulta posterior: 
+df_sector.to_csv(path+'sector_reference.csv', sep='\t')
+df_street.to_csv(path+'street_reference.csv', sep='\t')
+df_type.to_csv(path+'type_reference.csv', sep='\t')
+
+df.to_csv(path+'data_to_learn.csv', sep='\t')
+```
+
+
+```python
+
+```
