@@ -1,4 +1,6 @@
 # ZapImov_MachineLearning
+
+
 ##Limpeza dos dados
 
 ```python
@@ -1409,6 +1411,246 @@ df_type.to_csv(path+'type_reference.csv', sep='\t')
 
 df.to_csv(path+'data_to_learn.csv', sep='\t')
 ```
+
+
+```python
+
+```
+##Treinando o modelo linear
+
+
+```python
+import pandas as pd
+from sklearn                  import preprocessing
+from sklearn.cross_validation import train_test_split
+from sklearn                  import linear_model
+from sklearn                  import metrics
+
+path = 'C:\\Users\\bsine\\Desktop\\'
+
+df = pd.DataFrame.from_csv(path = path+'data_to_learn.csv' , sep = '\t')
+```
+
+
+```python
+#Coluna resultado
+#df = df[df.sector == 8]
+
+df['price'] = df['price'].apply(lambda x : x.replace('.', ''))
+y = df['price'].apply(lambda x : x.replace('.', ''))
+#Removendo coluna resultado do conjunto de treinamento
+del df['price']
+```
+
+
+```python
+X = df
+X.tail(3)
+```
+
+
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sector</th>
+      <th>street</th>
+      <th>type</th>
+      <th>room</th>
+      <th>suite</th>
+      <th>park</th>
+      <th>m2</th>
+    </tr>
+    <tr>
+      <th>?</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>12761</th>
+      <td>1</td>
+      <td>75</td>
+      <td>0</td>
+      <td>4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>236</td>
+    </tr>
+    <tr>
+      <th>12768</th>
+      <td>6</td>
+      <td>137</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <th>12771</th>
+      <td>33</td>
+      <td>428</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>56</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+#Gerando conjuntos de treino e teste: 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0, random_state=33)
+```
+
+
+```python
+#reduzindo escalas dos dados: 
+scaler  = preprocessing.StandardScaler().fit(X_train)
+X_train = scaler.transform(X_train)
+```
+
+
+```python
+#Iniciando classificador linear: 
+clf = linear_model.SGDClassifier(n_jobs=5)
+clf.fit(X_train, y_train)
+```
+
+
+
+
+    SGDClassifier(alpha=0.0001, average=False, class_weight=None, epsilon=0.1,
+           eta0=0.0, fit_intercept=True, l1_ratio=0.15,
+           learning_rate='optimal', loss='hinge', n_iter=5, n_jobs=5,
+           penalty='l2', power_t=0.5, random_state=None, shuffle=True,
+           verbose=0, warm_start=False)
+
+
+
+
+```python
+#Valor idêntico
+y_pred_train = clf.predict(X_train)
+metrics.accuracy_score(y_train, y_pred_train) * 100
+```
+
+
+
+
+    1.4409221902017291
+
+
+
+
+```python
+#Isso significa que há apenas 1,4% de acerto de valores usando o próprio conjunto de treino.
+```
+
+
+```python
+#Testando uma predição: 
+#Ensaio do indice 12768
+clf.predict(scaler.transform([[33, 428, 0, 2, 1, 1, 56]]))
+```
+
+
+
+
+    array(['295000'], 
+          dtype='<U9')
+
+
+
+
+```python
+#valor real do ensaio
+y[12768]
+```
+
+
+
+
+    '230000'
+
+
+
+
+```python
+def my_accuracy_score(amount=0, y_pred_train=[], y_train=[]):
+    count = 0
+    for x in range(len(y_pred_train)-1): 
+        pred = float(y_pred_train[x].replace('.',''))
+        test = float(y_train[x].replace('.',''))
+        
+        #print("Pred: %f Real: %f" % (pred, test) )
+        if (test + amount) >= pred and (test - amount) <= pred:
+            count += 1
+    return count / len(y_pred_train)
+        
+    
+```
+
+
+```python
+#valores com 1000 reais a mais ou a menos do real
+my_accuracy_score(amount=1000, y_pred_train=y_pred_train, y_train=y_train.as_matrix()) * 100
+```
+
+
+
+
+    1.5925982102229637
+
+
+
+
+```python
+#valores com 10000 reais a mais ou a manos do real
+```
+
+
+```python
+my_accuracy_score(amount=10000, y_pred_train=y_pred_train, y_train=y_train.as_matrix()) * 100
+```
+
+
+
+
+    4.535112998634916
+
+
+
+
+```python
+#Veredito: 
+#Com base nos testes acima, constatou-se que os dados são insuficientes para generalizar o modelo. 
+#Em termos técnicos, há um underfitting no modelo e seria necessário mais dados para o treino.
+#Conjunto total para treino: 
+len(X)
+```
+
+
+
+
+    6593
+
+
 
 
 ```python
